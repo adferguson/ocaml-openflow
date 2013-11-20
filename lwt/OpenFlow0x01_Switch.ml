@@ -114,7 +114,7 @@ let features (switch : t) =
   switch.features
 
 let disconnect (switch : t) : unit Lwt.t =
-	lwt _ = Lwt_unix.close switch.fd in
+	(* lwt _ = Lwt_unix.close switch.fd in *)
   Lwt.wakeup switch.disconnect ();
 	Lwt.return ()
 
