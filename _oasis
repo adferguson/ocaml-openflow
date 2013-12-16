@@ -46,6 +46,8 @@ Library openflow
     OpenFlow0x04,
     OpenFlow0x04_Core,
     SDN_Types    
+  CCOpt: -g
+  ByteOpt: -g
 
 Library lwt
   Findlibparent: openflow
