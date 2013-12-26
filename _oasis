@@ -73,6 +73,8 @@ Library lwt
     OpenFlow0x04_Misc,
     Socket,
     SDN
+  CCOpt: -g -ppopt -lwt-debug "-ppopt -lwt-debug"
+  ByteOpt: -g -ppopt -lwt-debug
 
 Library quickcheck
     Findlibparent: openflow
