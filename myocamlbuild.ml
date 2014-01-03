@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: 09611316886c2f8151d4860342138a50) *)
+(* DO NOT EDIT (digest: 49186065662e35d6351f0980128add39) *)
 module OASISGettext = struct
 (* # 22 "src/oasis/OASISGettext.ml" *)
 
@@ -562,7 +562,38 @@ let package_default =
           ("quickcheck", ["quickcheck"], [])
        ];
      lib_c = [];
-     flags = [];
+     flags =
+       [
+          (["oasis_library_openflow_ccopt"; "compile"],
+            [(OASISExpr.EBool true, S [A "-ccopt"; A "-g"])]);
+          (["oasis_library_openflow_byte"; "ocaml"; "link"; "byte"],
+            [(OASISExpr.EBool true, S [A "-g"])]);
+          (["oasis_library_openflow_byte"; "ocaml"; "ocamldep"; "byte"],
+            [(OASISExpr.EBool true, S [A "-g"])]);
+          (["oasis_library_openflow_byte"; "ocaml"; "compile"; "byte"],
+            [(OASISExpr.EBool true, S [A "-g"])]);
+          (["oasis_library_lwt_ccopt"; "compile"],
+            [
+               (OASISExpr.EBool true,
+                 S
+                   [
+                      A "-ccopt";
+                      A "-g";
+                      A "-ccopt";
+                      A "-ppopt";
+                      A "-ccopt";
+                      A "-lwt-debug";
+                      A "-ccopt";
+                      A "-ppopt -lwt-debug"
+                   ])
+            ]);
+          (["oasis_library_lwt_byte"; "ocaml"; "link"; "byte"],
+            [(OASISExpr.EBool true, S [A "-g"; A "-ppopt"; A "-lwt-debug"])]);
+          (["oasis_library_lwt_byte"; "ocaml"; "ocamldep"; "byte"],
+            [(OASISExpr.EBool true, S [A "-g"; A "-ppopt"; A "-lwt-debug"])]);
+          (["oasis_library_lwt_byte"; "ocaml"; "compile"; "byte"],
+            [(OASISExpr.EBool true, S [A "-g"; A "-ppopt"; A "-lwt-debug"])])
+       ];
      includes =
        [
           ("test", ["lib"; "lwt"; "quickcheck"]);
@@ -574,6 +605,6 @@ let package_default =
 
 let dispatch_default = MyOCamlbuildBase.dispatch_default package_default;;
 
-# 578 "myocamlbuild.ml"
+# 609 "myocamlbuild.ml"
 (* OASIS_STOP *)
 Ocamlbuild_plugin.dispatch dispatch_default;;

@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: ba4a07ed6d78a848c0ef895ce52fbba4)
+# DO NOT EDIT (digest: eadb7de2d19cc6556cec1ef24b1abd7b)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -15,12 +15,18 @@
 "_darcs": not_hygienic
 # Library openflow
 "lib/openflow.cmxs": use_openflow
+<lib/*.ml{,i}>: oasis_library_openflow_ccopt
+<lib/openflow.{cma,cmxa}>: oasis_library_openflow_byte
+<lib/*.ml{,i}>: oasis_library_openflow_byte
 <lib/*.ml{,i}>: package(packet)
 <lib/*.ml{,i}>: package(str)
 <lib/*.ml{,i}>: package(cstruct)
 <lib/*.ml{,i}>: package(cstruct.syntax)
 # Library lwt
 "lwt/lwt.cmxs": use_lwt
+<lwt/*.ml{,i}>: oasis_library_lwt_ccopt
+<lwt/lwt.{cma,cmxa}>: oasis_library_lwt_byte
+<lwt/*.ml{,i}>: oasis_library_lwt_byte
 <lwt/*.ml{,i}>: use_openflow
 <lwt/*.ml{,i}>: package(packet)
 <lwt/*.ml{,i}>: package(lwt)
