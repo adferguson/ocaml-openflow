@@ -58,9 +58,9 @@ let switch_handshake_finish (fd : file_descr) : OF.SwitchFeatures.t option Lwt.t
     | false ->
       Lwt.return None
 
-let switch_handshake_reply (fd : file_descr) : OF.SwitchFeatures.t option Lwt.t =
+let switch_handshake_reply ?xid:(xid=0l) (fd : file_descr) : OF.SwitchFeatures.t option Lwt.t =
   let open Message in
-  match_lwt send_to_switch_fd fd 0l (Hello (Cstruct.of_string "")) with
+  match_lwt send_to_switch_fd fd xid (Hello (Cstruct.of_string "")) with
   | true -> 
     begin 
       switch_handshake_finish fd 
@@ -68,12 +68,12 @@ let switch_handshake_reply (fd : file_descr) : OF.SwitchFeatures.t option Lwt.t 
   | false -> 
     Lwt.return None
 	
-let switch_handshake (fd : file_descr) : OF.SwitchFeatures.t option Lwt.t =
+let rec switch_handshake num_retries (fd : file_descr) : OF.SwitchFeatures.t option Lwt.t =
   let open Message in
   match_lwt recv_from_switch_fd fd with
-  | Some (_, Hello _) ->
+  | Some (xid, Hello _) ->
     begin
-      switch_handshake_reply fd
+      switch_handshake_reply ~xid:xid fd
     end
   | Some (_, error) ->
     let open OF.Error in
@@ -93,7 +93,10 @@ let switch_handshake (fd : file_descr) : OF.SwitchFeatures.t option Lwt.t =
     | _ -> Lwt.return None
     end
   | None ->
-    Lwt.return None
+    if num_retries > 0 then
+      switch_handshake (num_retries - 1) fd
+    else
+      Lwt.return None
 
 (******************************************************************************)
 
@@ -163,7 +166,7 @@ let handshake_aux (hs: file_descr -> OF.SwitchFeatures.t option Lwt.t) (fd : fil
                  switch.wait_disconnect ]);
     Lwt.return (Some switch)
 
-let handshake = handshake_aux switch_handshake 
+let handshake = handshake_aux (switch_handshake 1)
 
 let handshake_reply = handshake_aux switch_handshake_reply
 
